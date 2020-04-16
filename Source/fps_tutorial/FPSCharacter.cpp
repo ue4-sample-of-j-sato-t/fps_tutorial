@@ -69,6 +69,8 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	// アクションイベントのバインド
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &AFPSCharacter::StartJump);
 	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &AFPSCharacter::EndJump);
+
+	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &AFPSCharacter::Fire);
 }
 
 void AFPSCharacter::MoveForward(float Value)
@@ -99,3 +101,7 @@ void AFPSCharacter::EndJump()
 	bPressedJump = false;
 }
 
+void AFPSCharacter::Fire()
+{
+
+}

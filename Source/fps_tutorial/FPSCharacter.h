@@ -7,6 +7,7 @@
 #include "FPSCharacter.generated.h"
 
 class UCameraComponent;
+class AFPSProjectile;
 
 UCLASS()
 class FPS_TUTORIAL_API AFPSCharacter : public ACharacter
@@ -21,6 +22,21 @@ private:
 	// 一人称用メッシュ
 	UPROPERTY(VisibleAnywhere, Category = "Mesh")
 	USkeletalMeshComponent* FPSMesh;
+
+	// 弾としてスポーンするクラス
+	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
+	TSubclassOf<class AFPSProjectile> ProjectileClass;
+
+protected:
+
+	// カメラ位置から銃口へのオフセット
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
+		FVector MuzzleOffset;
+
+
+
+
+
 
 public:
 	// Sets default values for this character's properties
@@ -52,4 +68,8 @@ public:
 	// ジャンプ終了
 	UFUNCTION()
 	void EndJump();
+
+	// 発射
+	UFUNCTION()
+	void Fire();
 };
