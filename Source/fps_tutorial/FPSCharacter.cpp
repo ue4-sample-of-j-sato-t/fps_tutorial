@@ -35,5 +35,26 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
 
+	// 軸イベントのバインド
+	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
+	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
+}
+
+void AFPSCharacter::MoveForward(float Value)
+{
+	// 前方方向
+	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
+
+	// 移動
+	AddMovementInput(Direction * Value);
+}
+
+void AFPSCharacter::MoveRight(float Value)
+{
+	// 右方向
+	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
+
+	// 移動
+	AddMovementInput(Direction * Value);
 }
 
