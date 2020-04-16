@@ -37,6 +37,7 @@ public:
 
 	void FireInDirection(const FVector& ShootDirection);
 
+	UFUNCTION()
 	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NomalImpulse, const FHitResult& Hit);
 
 };
