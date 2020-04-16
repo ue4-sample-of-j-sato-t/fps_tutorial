@@ -43,6 +43,10 @@ void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompon
 	// - 視点
 	PlayerInputComponent->BindAxis("Turn", this, &AFPSCharacter::AddControllerYawInput);
 	PlayerInputComponent->BindAxis("LookUp", this, &AFPSCharacter::AddControllerPitchInput);
+
+	// アクションイベントのバインド
+	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &AFPSCharacter::StartJump);
+	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &AFPSCharacter::EndJump);
 }
 
 void AFPSCharacter::MoveForward(float Value)
@@ -61,5 +65,15 @@ void AFPSCharacter::MoveRight(float Value)
 
 	// 移動
 	AddMovementInput(Direction * Value);
+}
+
+void AFPSCharacter::StartJump()
+{
+	bPressedJump = true;
+}
+
+void AFPSCharacter::EndJump()
+{
+	bPressedJump = false;
 }
 

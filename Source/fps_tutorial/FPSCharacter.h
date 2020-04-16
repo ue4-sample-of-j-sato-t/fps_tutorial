@@ -33,4 +33,12 @@ public:
 	// 左右方向移動（右が正）
 	UFUNCTION()
 	void MoveRight(float Value);
+
+	// ジャンプ開始
+	UFUNCTION()
+	void StartJump();
+
+	// ジャンプ終了
+	UFUNCTION()
+	void EndJump();
 };
