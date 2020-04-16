@@ -13,6 +13,8 @@ AFPSProjectile::AFPSProjectile()
 
 	// 判定作成
 	CollisionComponent = CreateDefaultSubobject<USphereComponent>("SphereComponent");
+	// コリジョン設定
+	CollisionComponent->BodyInstance.SetCollisionProfileName(TEXT("Projectile"));
 	CollisionComponent->InitSphereRadius(15.f);
 	// ルートコンポーネントに設定
 	RootComponent = CollisionComponent;
@@ -26,6 +28,9 @@ AFPSProjectile::AFPSProjectile()
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
+
+	// 存続時間
+	InitialLifeSpan = 3.f;
 }
 
 // Called when the game starts or when spawned
