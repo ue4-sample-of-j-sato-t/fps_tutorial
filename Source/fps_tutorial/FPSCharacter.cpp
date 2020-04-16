@@ -4,6 +4,7 @@
 #include "FPSCharacter.h"
 #include "Engine.h"
 #include "Camera/CameraComponent.h"
+#include "FPSProjectile.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
@@ -103,5 +104,35 @@ void AFPSCharacter::EndJump()
 
 void AFPSCharacter::Fire()
 {
+	// ワールドの取得ができなければ中止
+	UWorld* World = GetWorld();
+	if (World == nullptr) return;
 
+	// 弾のクラスがセットされていなかったら中止
+	if (ProjectileClass == nullptr) return;
+
+	// 現在のカメラ情報保持
+	FVector CameraLocation;
+	FRotator CameraRotation;
+	GetActorEyesViewPoint(CameraLocation, CameraRotation);
+
+	// 発射位置の取得 -> カメラ位置 + カメラに合わせて回転させたマズル相対位置
+	FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
+	FRotator MuzzleRotation = CameraRotation;
+	// 発射方向調整
+	MuzzleRotation.Pitch += 10.f;
+
+	// - 以下生成
+
+	FActorSpawnParameters SpawnParam;
+	SpawnParam.Owner = this;
+	SpawnParam.Instigator = Instigator;
+
+	AFPSProjectile* Projectile = World->SpawnActor<AFPSProjectile>(ProjectileClass, MuzzleLocation, MuzzleRotation, SpawnParam);
+	if (Projectile)
+	{
+		// 初期設定
+		FVector LaunchDirection = MuzzleRotation.Vector();
+		Projectile->FireInDirection(LaunchDirection);
+	}
 }
