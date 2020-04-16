@@ -3,6 +3,7 @@
 
 #include "FPSCharacter.h"
 #include "Engine.h"
+#include "Camera/CameraComponent.h"
 
 // Sets default values
 AFPSCharacter::AFPSCharacter()
@@ -10,6 +11,13 @@ AFPSCharacter::AFPSCharacter()
  	// Set this character to call Tick() every frame.  You can turn this off to improve performance if you don't need it.
 	PrimaryActorTick.bCanEverTick = true;
 
+	// カメラ作成
+	FPSCameraComponent = CreateDefaultSubobject<UCameraComponent>(TEXT("FirstPersonCamera"));
+	FPSCameraComponent->SetupAttachment(GetCapsuleComponent());
+	// カメラ位置調整
+	FPSCameraComponent->SetRelativeLocation(FVector(0.f, 0.f, 50.f + BaseEyeHeight));
+	// ポーンがカメラの回転を制御できるようにする
+	FPSCameraComponent->bUsePawnControlRotation = true;
 }
 
 // Called when the game starts or when spawned

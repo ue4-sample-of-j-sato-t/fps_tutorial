@@ -6,10 +6,16 @@
 #include "GameFramework/Character.h"
 #include "FPSCharacter.generated.h"
 
+class UCameraComponent;
+
 UCLASS()
 class FPS_TUTORIAL_API AFPSCharacter : public ACharacter
 {
 	GENERATED_BODY()
+
+private:
+	UPROPERTY(VisibleAnywhere)
+	UCameraComponent* FPSCameraComponent;
 
 public:
 	// Sets default values for this character's properties
