@@ -1,4 +1,4 @@
-// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
+﻿// Copyright 1998-2019 Epic Games, Inc. All Rights Reserved.
 
 #pragma once
 
@@ -13,5 +13,6 @@ UCLASS()
 class FPS_TUTORIAL_API Afps_tutorialGameModeBase : public AGameModeBase
 {
 	GENERATED_BODY()
-	
+
+	virtual void StartPlay() override;
 };
