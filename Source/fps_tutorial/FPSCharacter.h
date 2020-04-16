@@ -14,8 +14,13 @@ class FPS_TUTORIAL_API AFPSCharacter : public ACharacter
 	GENERATED_BODY()
 
 private:
+	// カメラ
 	UPROPERTY(VisibleAnywhere)
 	UCameraComponent* FPSCameraComponent;
+
+	// 一人称用メッシュ
+	UPROPERTY(VisibleAnywhere, Category = "Mesh")
+	USkeletalMeshComponent* FPSMesh;
 
 public:
 	// Sets default values for this character's properties

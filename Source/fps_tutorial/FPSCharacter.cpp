@@ -18,6 +18,16 @@ AFPSCharacter::AFPSCharacter()
 	FPSCameraComponent->SetRelativeLocation(FVector(0.f, 0.f, 50.f + BaseEyeHeight));
 	// ポーンがカメラの回転を制御できるようにする
 	FPSCameraComponent->bUsePawnControlRotation = true;
+
+	// 一人称用メッシュ
+	FPSMesh = CreateDefaultSubobject<USkeletalMeshComponent>(TEXT("FirstPersonMesh"));
+	// 所持者のみに表示
+	FPSMesh->SetOnlyOwnerSee(true);
+	// カメラにアタッチ
+	FPSMesh->SetupAttachment(FPSCameraComponent);
+	// このメッシュでシャドウを作らないようにする
+	FPSMesh->bCastDynamicShadow = false;
+	FPSMesh->CastShadow = false;
 }
 
 // Called when the game starts or when spawned
@@ -29,6 +39,10 @@ void AFPSCharacter::BeginPlay()
 	{
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Red, TEXT("we are using FPSChearacter"));
 	}
+
+	// 三人称用メッシュ
+	// 所持者から見えなくする
+	GetMesh()->SetOwnerNoSee(true);
 }
 
 // Called every frame
