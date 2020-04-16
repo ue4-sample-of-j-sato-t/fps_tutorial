@@ -71,3 +71,9 @@ FPSMesh->SetOnlyOwnerSee(true);
 // ※コンストラクタでなく BeginPlay で実行する
 GetMesh()->SetOwnerNoSee(true);
 ```
+
+## よく詰まるところ
+
+- ソース側の変更がBPに反映されたい
+	- 元々あった設定がBP固有の設定として残ってしまう
+	- 黄色の戻す矢印を押すとデフォルト（ソース側の設定）に戻る
