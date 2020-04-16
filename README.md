@@ -59,3 +59,15 @@ void AFPSCharacter::MoveRight(float Value)
 	- 左右方向の回転
 - `AddControllerPitchInput`
 	- 上下方向の回転
+
+## メッシュ表示制御
+
+### 所有者から見て
+```cpp
+// 所有者にのみ表示
+FPSMesh->SetOnlyOwnerSee(true);
+
+// 所有者にのみ非表示
+// ※コンストラクタでなく BeginPlay で実行する
+GetMesh()->SetOwnerNoSee(true);
+```
