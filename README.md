@@ -72,6 +72,83 @@ FPSMesh->SetOnlyOwnerSee(true);
 GetMesh()->SetOwnerNoSee(true);
 ```
 
+## 当たり判定
+
+1. 判定チャンネル作成
+1. チャンネル用プリセット作成
+1. ヒット処理バインド
+
+### チャンネル作成
+
+1. ProjectSetting -> Engine -> Collision
+1. NewObjectChannel
+1. 名前と、他チャンネルオブジェクトとの接触時のデフォルト設定を入れる
+
+### プリセット作成
+
+1. 同画面Preset欄のNew
+1. 名前と判定が有効か、どのチャンネルかをセットする
+1. 他のチャンネルとの接触時の反応を個別で設定する
+
+### ヒット処理バインド
+
+```cpp
+	// コンストラクタ等でバインド
+	CollisionComponent->OnComponentHit.AddDynamic(this, &AFPSProjectile::OnHit);
+```
+
+```cpp
+	// 関数シグネチャ
+	UFUNCTION() // 付け忘れない
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NomalImpulse, const FHitResult& Hit);
+	/*
+		HitComponent : 自身のどのコンポーネントに当たったか
+		OtherActor : 接触相手のActor
+		OtherComponent : 接触相手のどのコンポーネントに当たったか
+		NomalImpulse : アクタの衝突する力
+		Hit : 衝突に関する詳細情報
+	 */
+
+
+	 // 実装例：当たったアクタに衝撃を与えて弾く
+	 if (OtherActor != this && OtherComponent->IsSimulatingPhysics())
+	{
+		// 自身の速度をもとにした力を衝突した点に加える（衝突相手のその後の動きは物理演算で）
+		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.f, Hit.ImpactPoint);
+	}
+```
+
+## HUD
+
+- テクスチャ等を2DGUIとして画面に描画する
+	- 動きの少ない表示はこちらがいい？
+	- 動きのあるときはUMGの方が使いやすい？
+
+### 描画処理
+
+- セットされたテクスチャを画面中央に表示する
+
+```cpp
+void AFPSHUD::DrawHUD()
+{
+	Super::DrawHUD();
+
+	// テクスチャがなければ中止
+	if (CrosshairTexture == nullptr) return;
+
+	// キャンバス（画面）の中心
+	FVector2D Center(Canvas->ClipX * 0.5f, Canvas->ClipY * 0.5f);
+
+	// テクスチャを中央に表示するための座標
+	FVector2D CrossHairDrawPosition(Center.X - (CrosshairTexture->GetSurfaceWidth() * 0.5f), Center.Y - (CrosshairTexture->GetSurfaceHeight() * 0.5f));
+
+	// 中心にテクスチャを描画
+	FCanvasTileItem TileItem(CrossHairDrawPosition, CrosshairTexture->Resource, FLinearColor::White);
+	TileItem.BlendMode = SE_BLEND_Translucent;
+	Canvas->DrawItem(TileItem);
+}
+```
+
 ## よく詰まるところ
 
 - ソース側の変更がBPに反映されたい
