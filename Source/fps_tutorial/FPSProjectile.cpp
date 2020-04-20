@@ -26,10 +26,11 @@ AFPSProjectile::AFPSProjectile()
 	ProjectileMovementComponent->SetUpdatedComponent(CollisionComponent);
 	// 移動設定
 	ProjectileMovementComponent->InitialSpeed = 3000.f;
-	ProjectileMovementComponent->MaxSpeed = 3000.f;
+	ProjectileMovementComponent->MaxSpeed = 6000.f;
 	ProjectileMovementComponent->bRotationFollowsVelocity = true;
 	ProjectileMovementComponent->bShouldBounce = true;
 	ProjectileMovementComponent->Bounciness = 0.3f;
+	ProjectileMovementComponent->ProjectileGravityScale = 0.f; //最初は重力を無視するようにする
 
 	// 存続時間
 	InitialLifeSpan = 3.f;
@@ -60,5 +61,8 @@ void AFPSProjectile::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor
 	{
 		OtherComponent->AddImpulseAtLocation(ProjectileMovementComponent->Velocity * 100.f, Hit.ImpactPoint);
 	}
+
+	// 自身は消去する
+	Destroy();
 }
 

@@ -29,6 +29,11 @@ AFPSCharacter::AFPSCharacter()
 	// このメッシュでシャドウを作らないようにする
 	FPSMesh->bCastDynamicShadow = false;
 	FPSMesh->CastShadow = false;
+
+	// 発射位置
+	ProjectileFirePoint = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePoint"));
+	ProjectileFirePoint->SetupAttachment(FPSCameraComponent);
+	ProjectileFirePoint->SetRelativeLocationAndRotation(FVector(150.f, 0.f, 0.f), FRotator(0.f, 0.f, 0.f));
 }
 
 // Called when the game starts or when spawned
@@ -116,11 +121,9 @@ void AFPSCharacter::Fire()
 	FRotator CameraRotation;
 	GetActorEyesViewPoint(CameraLocation, CameraRotation);
 
-	// 発射位置の取得 -> カメラ位置 + カメラに合わせて回転させたマズル相対位置
-	FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
-	FRotator MuzzleRotation = CameraRotation;
-	// 発射方向調整
-	MuzzleRotation.Pitch += 10.f;
+	// 発射位置の調整：ArrowComponentの位置・回転を使用
+	FVector MuzzleLocation = ProjectileFirePoint->GetComponentLocation();
+	FRotator MuzzleRotation = ProjectileFirePoint->GetComponentRotation();
 
 	// - 以下生成
 

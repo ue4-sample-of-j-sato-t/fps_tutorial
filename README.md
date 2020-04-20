@@ -210,3 +210,4 @@ void AFPSHUD::DrawHUD()
 
 - レティクルが機能していない
 	- 画面中央を直進していない
+		- 数値指定でなくArrowComponentを使う形に変更

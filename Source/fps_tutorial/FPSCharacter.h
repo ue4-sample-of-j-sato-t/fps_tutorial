@@ -27,15 +27,9 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	TSubclassOf<class AFPSProjectile> ProjectileClass;
 
-protected:
-
-	// カメラ位置から銃口へのオフセット
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
-		FVector MuzzleOffset;
-
-
-
-
+	// 発射位置指定用
+	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
+	UArrowComponent* ProjectileFirePoint;
 
 
 public:
