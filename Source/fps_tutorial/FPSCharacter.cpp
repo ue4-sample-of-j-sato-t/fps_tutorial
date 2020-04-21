@@ -61,30 +61,6 @@ void AFPSCharacter::Tick(float DeltaTime)
 	AddControllerPitchInput(CameraInput.Pitch);
 }
 
-// Called to bind functionality to input
-void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-}
-
-void AFPSCharacter::MoveForward(float Value)
-{
-	// 前方方向
-	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
-
-	// 移動
-	AddMovementInput(Direction * Value);
-}
-
-void AFPSCharacter::MoveRight(float Value)
-{
-	// 右方向
-	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
-
-	// 移動
-	AddMovementInput(Direction * Value);
-}
-
 void AFPSCharacter::StartJump()
 {
 	bPressedJump = true;

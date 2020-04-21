@@ -46,17 +46,6 @@ public:
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
 
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	// 前後方向移動
-	UFUNCTION()
-	void MoveForward(float Value);
-
-	// 左右方向移動（右が正）
-	UFUNCTION()
-	void MoveRight(float Value);
-
 	// ジャンプ開始
 	UFUNCTION()
 	void StartJump();
