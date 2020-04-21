@@ -5,8 +5,6 @@
 
 AFPSCharacterController::AFPSCharacterController()
 {
-	Super();
-
 	PrimaryActorTick.bCanEverTick = true;
 }
 
