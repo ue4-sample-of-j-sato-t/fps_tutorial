@@ -12,6 +12,8 @@ AFPSCharacterController::AFPSCharacterController()
 	Rotation = FRotator(0.f);
 
 	CharacterInterface = nullptr;
+
+	SetIgnoreLookInput(false);
 }
 
 void AFPSCharacterController::SetupInputComponent()
@@ -55,12 +57,12 @@ void AFPSCharacterController::MoveRight(float AxisValue)
 
 void AFPSCharacterController::TurnCamera(float AxisValue)
 {
-	Rotation.Pitch = AxisValue;
+	Rotation.Yaw = AxisValue;
 }
 
 void AFPSCharacterController::LookupCamera(float AxisValue)
 {
-	Rotation.Yaw = AxisValue;
+	Rotation.Pitch = AxisValue;
 }
 
 void AFPSCharacterController::StartJump()

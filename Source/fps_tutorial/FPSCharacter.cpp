@@ -55,7 +55,10 @@ void AFPSCharacter::BeginPlay()
 void AFPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
+	
+	// カメラはTickでないと動かない？
+	AddControllerYawInput(CameraInput.Yaw);
+	AddControllerPitchInput(CameraInput.Pitch);
 }
 
 // Called to bind functionality to input
@@ -130,23 +133,25 @@ void AFPSCharacter::MoveIF(FVector Direction)
 	FVector MoveDirection = GetActorRotation().RotateVector(Direction);
 	MoveDirection.Normalize();
 
-	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Cyan, TEXT("MoveDirection = ") + MoveDirection.ToString());
-
 	AddMovementInput(MoveDirection);
 }
 
 void AFPSCharacter::RotationIF(FRotator Rotation)
 {
+	CameraInput = Rotation;
 }
 
 void AFPSCharacter::StartJumpIF()
 {
+	StartJump();
 }
 
 void AFPSCharacter::EndJumpIF()
 {
+	EndJump();
 }
 
 void AFPSCharacter::FireIF()
 {
+	Fire();
 }

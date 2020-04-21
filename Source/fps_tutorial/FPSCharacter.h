@@ -32,6 +32,7 @@ private:
 	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
 	UArrowComponent* ProjectileFirePoint;
 
+	FRotator CameraInput;
 
 public:
 	// Sets default values for this character's properties
