@@ -6,6 +6,8 @@
 #include "GameFramework/Actor.h"
 #include "ShotTarget.generated.h"
 
+class UBoxComponent;
+
 UCLASS()
 class FPS_TUTORIAL_API AShotTarget : public AActor
 {
@@ -19,6 +21,10 @@ private:
 	// 表示物
 	UPROPERTY(EditAnywhere)
 	UStaticMeshComponent* TargetMesh;
+
+	// 判定
+	UPROPERTY(EditDefaultsOnly)
+	UBoxComponent* CollisionComponent;
 	
 public:	
 	// Sets default values for this actor's properties
@@ -29,7 +35,12 @@ protected:
 	virtual void BeginPlay() override;
 
 public:	
-	// Called every frame
-	virtual void Tick(float DeltaTime) override;
 
+private:
+	UFUNCTION()
+	void OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, UPrimitiveComponent* OtherComponent, FVector NomalImpulse, const FHitResult& Hit);
+
+public:
+	UFUNCTION(BlueprintImplementableEvent, Category = "FPS")
+	void OnProjectileHit();
 };
