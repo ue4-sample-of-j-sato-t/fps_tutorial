@@ -231,3 +231,19 @@ void AFPSHUD::DrawHUD()
 - レティクルが機能していない
 	- 画面中央を直進していない
 		- 数値指定でなくArrowComponentを使う形に変更
+
+
+## エンジン側の関数をオーバーライドする
+
+- **必ず**親クラスの関数を呼ぶ
+
+```cpp
+// APlayerController::OnPossess をオーバーライドする場合
+void AFPSCharacterController::OnPossess(APawn* InPawn)
+{
+	// Superを使って親クラスの処理を呼ぶ
+	Super::OnPossess(InPawn);
+
+	/* 派生先の固有処理 */
+}
+```

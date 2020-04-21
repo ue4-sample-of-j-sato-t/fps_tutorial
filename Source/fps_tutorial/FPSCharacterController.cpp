@@ -10,10 +10,14 @@ AFPSCharacterController::AFPSCharacterController()
 
 	MoveDirection = FVector(0.f);
 	Rotation = FRotator(0.f);
+
+	CharacterInterface = nullptr;
 }
 
 void AFPSCharacterController::SetupInputComponent()
 {
+	Super::SetupInputComponent();
+
 	InputComponent->BindAxis("MoveForward", this, &AFPSCharacterController::MoveForward);
 	InputComponent->BindAxis("MoveRight", this, &AFPSCharacterController::MoveRight);
 
@@ -28,6 +32,8 @@ void AFPSCharacterController::SetupInputComponent()
 
 void AFPSCharacterController::OnPossess(APawn* InPawn)
 {
+	Super::OnPossess(InPawn);
+
 	// 一旦クリア
 	CharacterInterface = nullptr;
 

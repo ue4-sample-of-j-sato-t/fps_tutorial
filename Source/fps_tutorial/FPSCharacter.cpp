@@ -62,21 +62,6 @@ void AFPSCharacter::Tick(float DeltaTime)
 void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
 {
 	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	// 軸イベントのバインド
-	// - 移動
-	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
-
-	// - 視点
-	PlayerInputComponent->BindAxis("Turn", this, &AFPSCharacter::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &AFPSCharacter::AddControllerPitchInput);
-
-	// アクションイベントのバインド
-	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &AFPSCharacter::StartJump);
-	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &AFPSCharacter::EndJump);
-
-	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &AFPSCharacter::Fire);
 }
 
 void AFPSCharacter::MoveForward(float Value)
@@ -138,4 +123,30 @@ void AFPSCharacter::Fire()
 		FVector LaunchDirection = MuzzleRotation.Vector();
 		Projectile->FireInDirection(LaunchDirection);
 	}
+}
+
+void AFPSCharacter::MoveIF(FVector Direction)
+{
+	FVector MoveDirection = GetActorRotation().RotateVector(Direction);
+	MoveDirection.Normalize();
+
+	GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Cyan, TEXT("MoveDirection = ") + MoveDirection.ToString());
+
+	AddMovementInput(MoveDirection);
+}
+
+void AFPSCharacter::RotationIF(FRotator Rotation)
+{
+}
+
+void AFPSCharacter::StartJumpIF()
+{
+}
+
+void AFPSCharacter::EndJumpIF()
+{
+}
+
+void AFPSCharacter::FireIF()
+{
 }

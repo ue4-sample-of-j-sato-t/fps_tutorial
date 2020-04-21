@@ -4,13 +4,14 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "FPSCharacterInterface.h"
 #include "FPSCharacter.generated.h"
 
 class UCameraComponent;
 class AFPSProjectile;
 
 UCLASS()
-class FPS_TUTORIAL_API AFPSCharacter : public ACharacter
+class FPS_TUTORIAL_API AFPSCharacter : public ACharacter, public IFPSCharacterInterface
 {
 	GENERATED_BODY()
 
@@ -66,4 +67,11 @@ public:
 	// 発射
 	UFUNCTION()
 	void Fire();
+
+	// FPSCharacterInterface
+	virtual void MoveIF(FVector Direction) override;
+	virtual void RotationIF(FRotator Rotation) override;
+	virtual void StartJumpIF() override;
+	virtual void EndJumpIF() override;
+	virtual void FireIF() override;
 };
