@@ -5,6 +5,8 @@
 #include "Components/StaticMeshComponent.h"
 #include "Components/BoxComponent.h"
 #include "FPSProjectile.h"
+#include "Kismet/GameplayStatics.h"
+#include "fps_tutorialGameModeBase.h"
 
 // Sets default values
 AShotTarget::AShotTarget()
@@ -38,6 +40,12 @@ void AShotTarget::OnHit(UPrimitiveComponent* HitComponent, AActor* OtherActor, U
 
 	// 固有処理呼び出し
 	OnProjectileHit();
+
+	Afps_tutorialGameModeBase* GameMode = Cast<Afps_tutorialGameModeBase>(UGameplayStatics::GetGameMode(GetWorld()));
+	if (GameMode)
+	{
+		GameMode->AddScore();
+	}
 
 	// 自身を削除
 	Destroy();

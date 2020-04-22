@@ -39,6 +39,10 @@ protected:
 	UPROPERTY(BlueprintReadOnly, Category = "State/Timer")
 	float LastTimeLimit;
 
+	// スコア
+	UPROPERTY(BlueprintReadWrite, Category = "State/Score")
+	int32 Score;
+
 private:
 	// tick用関数
 	void TickBefor(float DeltaTime);
@@ -55,5 +59,5 @@ public:
 	virtual void StartPlay() override;
 	virtual void Tick(float DeltaTime) override;
 
-	
+	void AddScore(int32 InAddScore = 1);
 };

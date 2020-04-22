@@ -14,6 +14,8 @@ Afps_tutorialGameModeBase::Afps_tutorialGameModeBase(const FObjectInitializer& O
 
 	MaxTimeLimit = 30.f;
 	LastTimeLimit = MaxTimeLimit;
+
+	Score = 0;
 }
 
 void Afps_tutorialGameModeBase::TickBefor(float DeltaTime)
@@ -46,6 +48,8 @@ void Afps_tutorialGameModeBase::StartRunning()
 
 void Afps_tutorialGameModeBase::StartAfter()
 {
+	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("SCORE : ") + FString::FromInt(Score));
+
 	auto Controller = UGameplayStatics::GetPlayerController(this, 0);
 	if (!Controller)return;
 	Controller->UnPossess();
@@ -100,4 +104,16 @@ void Afps_tutorialGameModeBase::Tick(float DeltaTime)
 			break;
 		}
 	}
+}
+
+void Afps_tutorialGameModeBase::AddScore(int32 InAddScore)
+{
+	if (GameTiming != EGameTiming::RUNNING_GAME)return;
+
+	if (InAddScore <= 0)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("disable add score"));
+		return;
+	}
+	Score += InAddScore;
 }
