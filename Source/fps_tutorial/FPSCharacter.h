@@ -34,9 +34,22 @@ private:
 
 	FRotator CameraInput;
 
+protected:
+	// 最大弾数
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ammo")
+	int32 MaxAmmo;
+
+	// 現在の残弾数
+	UPROPERTY(BlueprintReadOnly, Category = "Ammo")
+	int32 NowAmmo;
+
 public:
 	// Sets default values for this character's properties
 	AFPSCharacter();
+
+private:
+	// 発射ができる状態か
+	bool CanFire();
 
 protected:
 	// Called when the game starts or when spawned

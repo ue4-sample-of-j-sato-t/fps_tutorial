@@ -34,6 +34,17 @@ AFPSCharacter::AFPSCharacter()
 	ProjectileFirePoint = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePoint"));
 	ProjectileFirePoint->SetupAttachment(FPSCameraComponent);
 	ProjectileFirePoint->SetRelativeLocationAndRotation(FVector(150.f, 0.f, 0.f), FRotator(0.f, 0.f, 0.f));
+
+	// 初期弾数
+	MaxAmmo = 12;
+	NowAmmo = MaxAmmo;
+}
+
+bool AFPSCharacter::CanFire()
+{
+	return (NowAmmo > 0);
+
+	// TODO（残弾がある && リロード中でない）
 }
 
 // Called when the game starts or when spawned
@@ -73,6 +84,15 @@ void AFPSCharacter::EndJump()
 
 void AFPSCharacter::Fire()
 {
+	// キャラクターのステータスとして発射できる状態でなければ中止
+	if (!CanFire())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Can not fire!"));
+		return;
+	}
+	// 一発消費
+	NowAmmo--;
+
 	// ワールドの取得ができなければ中止
 	UWorld* World = GetWorld();
 	if (World == nullptr) return;
