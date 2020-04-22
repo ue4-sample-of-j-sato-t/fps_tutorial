@@ -151,3 +151,8 @@ void AFPSCharacter::FireIF()
 {
 	Fire();
 }
+
+void AFPSCharacter::ReloadIF()
+{
+	NowAmmo = MaxAmmo;
+}

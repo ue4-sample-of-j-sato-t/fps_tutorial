@@ -44,6 +44,7 @@ private:
 	void EndJump();
 
 	void FireProjectile();
+	void Reload();
 
 public:
 	virtual void Tick(float DeltaTime) override;

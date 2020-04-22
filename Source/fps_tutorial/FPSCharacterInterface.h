@@ -49,4 +49,9 @@ public:
 		発射
 	*/
 	virtual void FireIF() {}
+
+	/**
+		リロード
+	*/
+	virtual void ReloadIF() {}
 };

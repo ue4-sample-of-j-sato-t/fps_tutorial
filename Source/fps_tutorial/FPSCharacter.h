@@ -77,4 +77,5 @@ public:
 	virtual void StartJumpIF() override;
 	virtual void EndJumpIF() override;
 	virtual void FireIF() override;
+	virtual void ReloadIF() override;
 };

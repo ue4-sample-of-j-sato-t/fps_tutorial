@@ -3,6 +3,7 @@
 
 #include "FPSCharacterController.h"
 #include "GameFramework/Pawn.h"
+#include "Engine.h"
 
 AFPSCharacterController::AFPSCharacterController()
 {
@@ -30,6 +31,7 @@ void AFPSCharacterController::SetupInputComponent()
 	InputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &AFPSCharacterController::EndJump);
 
 	InputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &AFPSCharacterController::FireProjectile);
+	InputComponent->BindAction("Reload", EInputEvent::IE_Pressed, this, &AFPSCharacterController::Reload);
 }
 
 void AFPSCharacterController::OnPossess(APawn* InPawn)
@@ -81,6 +83,12 @@ void AFPSCharacterController::FireProjectile()
 {
 	if (!CharacterInterface) return;
 	CharacterInterface->FireIF();
+}
+
+void AFPSCharacterController::Reload()
+{
+	if (!CharacterInterface)return;
+	CharacterInterface->ReloadIF();
 }
 
 void AFPSCharacterController::Tick(float DeltaTime)
