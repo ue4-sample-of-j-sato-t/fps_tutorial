@@ -13,7 +13,7 @@ AShotTarget::AShotTarget()
 	PrimaryActorTick.bCanEverTick = false;	// 当たったときの反応だけのはずなのでTickは切る
 
 	Root = CreateDefaultSubobject<USceneComponent>("Root Component");
-	Root->SetupAttachment(RootComponent);
+	RootComponent = Root;
 
 	TargetMesh = CreateDefaultSubobject<UStaticMeshComponent>(TEXT("TargetMesh"));
 	TargetMesh->SetupAttachment(Root);
