@@ -47,6 +47,14 @@ void AFPSCharacterController::OnPossess(APawn* InPawn)
 	}
 }
 
+void AFPSCharacterController::OnUnPossess()
+{
+	Super::OnUnPossess();
+
+	// 操作できなくする
+	CharacterInterface = nullptr;
+}
+
 void AFPSCharacterController::MoveForward(float AxisValue)
 {
 	MoveDirection.X = AxisValue;
