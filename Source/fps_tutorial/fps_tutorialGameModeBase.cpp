@@ -133,8 +133,7 @@ void Afps_tutorialGameModeBase::StartPlay()
 	}
 
 	// 最初のステートをセット
-	GameTiming = EGameTiming::BEFOR_GAME;
-	StartBefor();
+	GameTiming = EGameTiming::INITIALIZE;
 }
 
 void Afps_tutorialGameModeBase::Tick(float DeltaTime)
@@ -153,6 +152,9 @@ void Afps_tutorialGameModeBase::Tick(float DeltaTime)
 		break;
 	case EGameTiming::AFTER_GAME:
 		TickAfter(DeltaTime);
+		break;
+	case EGameTiming::INITIALIZE:
+		GameTiming = EGameTiming::BEFOR_GAME;
 		break;
 	default:
 		break;

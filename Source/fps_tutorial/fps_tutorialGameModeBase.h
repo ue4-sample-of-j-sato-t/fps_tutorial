@@ -12,7 +12,8 @@ enum class EGameTiming : uint8
 	BEFOR_GAME,
 	RUNNING_GAME,
 	AFTER_GAME,
-	MAX
+	INITIALIZE,
+	MAX,
 };
 
 DECLARE_DELEGATE_OneParam(TickDelegate, float)
