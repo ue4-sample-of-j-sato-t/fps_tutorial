@@ -10,6 +10,8 @@
 class UCameraComponent;
 class AFPSProjectile;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateLastAmmo, int32, NewAmmoNum);
+
 UCLASS()
 class FPS_TUTORIAL_API AFPSCharacter : public ACharacter, public IFPSCharacterInterface
 {
@@ -42,6 +44,10 @@ protected:
 	// 現在の残弾数
 	UPROPERTY(BlueprintReadOnly, Category = "Ammo")
 	int32 NowAmmo;
+
+	// 残弾数更新イベント
+	UPROPERTY(BlueprintAssignable, Category = "Ammo")
+	FUpdateLastAmmo UpdateLastAmmo;
 
 public:
 	// Sets default values for this character's properties

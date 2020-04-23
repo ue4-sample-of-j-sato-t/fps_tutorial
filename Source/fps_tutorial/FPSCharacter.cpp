@@ -92,6 +92,7 @@ void AFPSCharacter::Fire()
 	}
 	// 一発消費
 	NowAmmo--;
+	UpdateLastAmmo.Broadcast(NowAmmo);
 
 	// ワールドの取得ができなければ中止
 	UWorld* World = GetWorld();
@@ -155,4 +156,5 @@ void AFPSCharacter::FireIF()
 void AFPSCharacter::ReloadIF()
 {
 	NowAmmo = MaxAmmo;
+	UpdateLastAmmo.Broadcast(NowAmmo);
 }
