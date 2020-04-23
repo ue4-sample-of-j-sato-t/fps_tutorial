@@ -16,7 +16,9 @@ enum class EGameTiming : uint8
 	MAX,
 };
 
-DECLARE_DELEGATE_OneParam(TickDelegate, float)
+
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FScoreUpdateDelegate, int32, NewScore);
+
 class ATargetFactory;
 
 /**
@@ -44,6 +46,10 @@ protected:
 	// スコア
 	UPROPERTY(BlueprintReadWrite, Category = "State|Score")
 	int32 Score;
+
+	// スコア更新時のイベント
+	UPROPERTY(BlueprintAssignable, Category="State|Score")
+	FScoreUpdateDelegate OnUpdateScore;
 
 	// 的生成アクタ
 	TArray<ATargetFactory*> TargetFactorys;

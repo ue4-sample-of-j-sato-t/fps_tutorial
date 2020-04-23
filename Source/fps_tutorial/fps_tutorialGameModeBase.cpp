@@ -189,4 +189,6 @@ void Afps_tutorialGameModeBase::AddScore(int32 InAddScore)
 		return;
 	}
 	Score += InAddScore;
+
+	OnUpdateScore.Broadcast(Score);
 }
