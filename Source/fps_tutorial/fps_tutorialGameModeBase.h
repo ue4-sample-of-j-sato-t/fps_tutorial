@@ -9,10 +9,10 @@
 UENUM(BlueprintType)
 enum class EGameTiming : uint8
 {
+	INITIALIZE,
 	BEFOR_GAME,
 	RUNNING_GAME,
 	AFTER_GAME,
-	INITIALIZE,
 	MAX,
 };
 
@@ -53,6 +53,7 @@ protected:
 	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "State|Befor")
 	float BeforWaitTime;
 	// 残り待機時間
+	UPROPERTY(BlueprintReadOnly, Category = "State|Befor")
 	float LastBeforWaitTime;
 
 	// 最後に外されたPawn
