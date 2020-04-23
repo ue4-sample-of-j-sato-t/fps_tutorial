@@ -5,23 +5,81 @@
 
 #include "Engine.h"
 #include "Kismet/GameplayStatics.h"
+#include "TargetFactory.h"
 
 Afps_tutorialGameModeBase::Afps_tutorialGameModeBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
 	PrimaryActorTick.bCanEverTick = true;
 
-	GameTiming = EGameTiming::BEFOR_GAME;
-
 	MaxTimeLimit = 30.f;
-	LastTimeLimit = MaxTimeLimit;
 
 	Score = 0;
+
+	BeforWaitTime = 5.f;
+}
+
+void Afps_tutorialGameModeBase::HoldTargetFactorys()
+{
+	TargetFactorys.Empty();
+
+	TArray<AActor*> Emitters;
+	UGameplayStatics::GetAllActorsOfClass(GetWorld(), ATargetFactory::StaticClass(), Emitters);
+
+	for (auto Actor : Emitters)
+	{
+		ATargetFactory* Factory = Cast<ATargetFactory>(Actor);
+		
+		// 念の為チェック
+		if (!Factory) continue;
+
+		TargetFactorys.Add(Factory);
+	}
+
+	GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Cyan, TEXT("Holded factory num : ") + FString::FromInt(TargetFactorys.Num()));
+}
+
+void Afps_tutorialGameModeBase::SetTickableToFactorys(bool bNewTickable)
+{
+	for (auto Factory : TargetFactorys)
+	{
+		Factory->SetActorTickEnabled(bNewTickable);
+	}
+}
+
+void Afps_tutorialGameModeBase::UnPossessController()
+{
+	auto Controller = UGameplayStatics::GetPlayerController(this, 0);
+	if (!Controller)return;
+
+	// 使用していたポーンを保持
+	auto NowPossessPawn = Controller->GetPawn();
+	if (NowPossessPawn)LastPossessedPawn = NowPossessPawn;
+
+	Controller->UnPossess();
+}
+
+void Afps_tutorialGameModeBase::PossessController()
+{
+	auto Controller = UGameplayStatics::GetPlayerController(this, 0);
+	if (!Controller)return;
+
+	if (!LastPossessedPawn)return;
+	Controller->Possess(LastPossessedPawn);
 }
 
 void Afps_tutorialGameModeBase::TickBefor(float DeltaTime)
 {
-	// TODO 開始前待機
-	GameTiming = EGameTiming::RUNNING_GAME;
+	LastBeforWaitTime -= DeltaTime;
+
+	if (LastBeforWaitTime <= 0.f)
+	{
+		GameTiming = EGameTiming::RUNNING_GAME;
+		GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Yellow, TEXT("Game Start!"));
+	}
+	else
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 0.f, FColor::Cyan, TEXT("WaitTime : ") + FString::SanitizeFloat(LastBeforWaitTime));
+	}
 }
 
 void Afps_tutorialGameModeBase::TickRunning(float DeltaTime)
@@ -40,30 +98,43 @@ void Afps_tutorialGameModeBase::TickAfter(float DeltaTime)
 
 void Afps_tutorialGameModeBase::StartBefor()
 {
+	SetTickableToFactorys(false);
+	UnPossessController();
 }
 
 void Afps_tutorialGameModeBase::StartRunning()
 {
+	SetTickableToFactorys(true);
+	PossessController();
 }
 
 void Afps_tutorialGameModeBase::StartAfter()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("SCORE : ") + FString::FromInt(Score));
 
-	auto Controller = UGameplayStatics::GetPlayerController(this, 0);
-	if (!Controller)return;
-	Controller->UnPossess();
+	UnPossessController();
+
+	SetTickableToFactorys(false);
 }
 
 void Afps_tutorialGameModeBase::StartPlay()
 {
 	Super::StartPlay();
 
+	LastTimeLimit = MaxTimeLimit;
+	LastBeforWaitTime = BeforWaitTime;
+
+	HoldTargetFactorys();
+
 	if (GEngine)
 	{
 		// 画面上に出すログ
 		GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Yellow, TEXT("Hello world, this is FPSGameMode"));
 	}
+
+	// 最初のステートをセット
+	GameTiming = EGameTiming::BEFOR_GAME;
+	StartBefor();
 }
 
 void Afps_tutorialGameModeBase::Tick(float DeltaTime)
