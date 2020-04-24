@@ -24,4 +24,6 @@ public:
 
     UFUNCTION(BlueprintCallable)
     void MovePlayLevel();
+
+    virtual void StartPlay() override;
 };
