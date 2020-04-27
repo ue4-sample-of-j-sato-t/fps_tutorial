@@ -2,10 +2,20 @@
 
 
 #include "TitleController.h"
+#include "GameFramework/Pawn.h"
+#include "FPSCharacterInterface.h"
 
 void ATitleController::OnShootInput()
 {
-	OnShootEvent.Broadcast();
+	APawn* MyPawn = GetPawn<APawn>();
+	if (MyPawn && MyPawn->GetClass()->ImplementsInterface(UFPSCharacterInterface::StaticClass()))
+	{
+		Cast<IFPSCharacterInterface>(MyPawn)->FireIF();
+	}
+
+
+	//OnShootEvent.Broadcast();
+	//UnPossess();
 }
 
 void ATitleController::SetupInputComponent()
