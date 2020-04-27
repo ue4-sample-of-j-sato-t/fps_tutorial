@@ -6,6 +6,7 @@
 #include "Engine.h"
 #include "Kismet/GameplayStatics.h"
 #include "TargetFactory.h"
+#include "LevelChangePawn.h"
 
 Afps_tutorialGameModeBase::Afps_tutorialGameModeBase(const FObjectInitializer& ObjectInitializer) : Super(ObjectInitializer)
 {
@@ -67,6 +68,34 @@ void Afps_tutorialGameModeBase::PossessController()
 	Controller->Possess(LastPossessedPawn);
 }
 
+void Afps_tutorialGameModeBase::SpawnAndSetToTitle()
+{
+	// 設定確認
+	if (!ToTitlePawnClass)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("No set ToTitlePawnClass"));
+		return;
+	}
+
+	// スポーン
+	FActorSpawnParameters SpawnParams;
+	SpawnParams.Owner = this;
+	SpawnParams.Instigator = Instigator;
+
+	ALevelChangePawn* ToTitlePawn = GetWorld()->SpawnActor<ALevelChangePawn>(ToTitlePawnClass, LastPossessedPawn->GetActorLocation(), LastPossessedPawn->GetActorRotation(), SpawnParams);
+	if (!ToTitlePawn)
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Fail spawn ToTitlePawn"));
+		return;
+	}
+
+	// 接続
+	auto Controller = UGameplayStatics::GetPlayerController(this, 0);
+	if (!Controller)return;
+
+	Controller->Possess(ToTitlePawn);
+}
+
 void Afps_tutorialGameModeBase::TickBefor(float DeltaTime)
 {
 	LastBeforWaitTime -= DeltaTime;
@@ -112,7 +141,8 @@ void Afps_tutorialGameModeBase::StartAfter()
 {
 	GEngine->AddOnScreenDebugMessage(-1, 5.f, FColor::Blue, TEXT("SCORE : ") + FString::FromInt(Score));
 
-	UnPossessController();
+	//UnPossessController();
+	SpawnAndSetToTitle();
 
 	SetTickableToFactorys(false);
 }

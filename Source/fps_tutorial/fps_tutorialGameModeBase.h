@@ -20,6 +20,7 @@ enum class EGameTiming : uint8
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FScoreUpdateDelegate, int32, NewScore);
 
 class ATargetFactory;
+class ALevelChangePawn;
 
 /**
  * 
@@ -65,6 +66,10 @@ protected:
 	// 最後に外されたPawn
 	APawn* LastPossessedPawn;
 
+	// ゲーム終了後にタイトルに戻すポーンクラス
+	UPROPERTY(EditDefaultsOnly, Category = "State")
+	TSubclassOf<class ALevelChangePawn> ToTitlePawnClass;
+
 private:
 	
 	// 的生成アクタ保持
@@ -76,6 +81,8 @@ private:
 	void UnPossessController();
 	// コントローラにキャラをセット
 	void PossessController();
+	// タイトルに遷移させるポーンを生成してセット
+	void SpawnAndSetToTitle();
 
 
 
