@@ -4,13 +4,16 @@
 
 #include "CoreMinimal.h"
 #include "GameFramework/Character.h"
+#include "FPSCharacterInterface.h"
 #include "FPSCharacter.generated.h"
 
 class UCameraComponent;
 class AFPSProjectile;
 
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FUpdateLastAmmo, int32, NewAmmoNum);
+
 UCLASS()
-class FPS_TUTORIAL_API AFPSCharacter : public ACharacter
+class FPS_TUTORIAL_API AFPSCharacter : public ACharacter, public IFPSCharacterInterface
 {
 	GENERATED_BODY()
 
@@ -27,20 +30,32 @@ private:
 	UPROPERTY(EditDefaultsOnly, Category = "Gameplay")
 	TSubclassOf<class AFPSProjectile> ProjectileClass;
 
+	// 発射位置指定用
+	UPROPERTY(VisibleAnywhere, Category = "Gameplay")
+	UArrowComponent* ProjectileFirePoint;
+
+	FRotator CameraInput;
+
 protected:
+	// 最大弾数
+	UPROPERTY(EditDefaultsOnly, BlueprintReadOnly, Category = "Ammo")
+	int32 MaxAmmo;
 
-	// カメラ位置から銃口へのオフセット
-	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "Gameplay")
-		FVector MuzzleOffset;
+	// 現在の残弾数
+	UPROPERTY(BlueprintReadOnly, Category = "Ammo")
+	int32 NowAmmo;
 
-
-
-
-
+	// 残弾数更新イベント
+	UPROPERTY(BlueprintAssignable, Category = "Ammo")
+	FUpdateLastAmmo UpdateLastAmmo;
 
 public:
 	// Sets default values for this character's properties
 	AFPSCharacter();
+
+private:
+	// 発射ができる状態か
+	bool CanFire();
 
 protected:
 	// Called when the game starts or when spawned
@@ -49,17 +64,6 @@ protected:
 public:	
 	// Called every frame
 	virtual void Tick(float DeltaTime) override;
-
-	// Called to bind functionality to input
-	virtual void SetupPlayerInputComponent(class UInputComponent* PlayerInputComponent) override;
-
-	// 前後方向移動
-	UFUNCTION()
-	void MoveForward(float Value);
-
-	// 左右方向移動（右が正）
-	UFUNCTION()
-	void MoveRight(float Value);
 
 	// ジャンプ開始
 	UFUNCTION()
@@ -72,4 +76,12 @@ public:
 	// 発射
 	UFUNCTION()
 	void Fire();
+
+	// FPSCharacterInterface
+	virtual void MoveIF(FVector Direction) override;
+	virtual void RotationIF(FRotator Rotation) override;
+	virtual void StartJumpIF() override;
+	virtual void EndJumpIF() override;
+	virtual void FireIF() override;
+	virtual void ReloadIF() override;
 };

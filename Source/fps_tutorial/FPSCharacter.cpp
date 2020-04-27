@@ -29,6 +29,22 @@ AFPSCharacter::AFPSCharacter()
 	// このメッシュでシャドウを作らないようにする
 	FPSMesh->bCastDynamicShadow = false;
 	FPSMesh->CastShadow = false;
+
+	// 発射位置
+	ProjectileFirePoint = CreateDefaultSubobject<UArrowComponent>(TEXT("FirePoint"));
+	ProjectileFirePoint->SetupAttachment(FPSCameraComponent);
+	ProjectileFirePoint->SetRelativeLocationAndRotation(FVector(150.f, 0.f, 0.f), FRotator(0.f, 0.f, 0.f));
+
+	// 初期弾数
+	MaxAmmo = 12;
+	NowAmmo = MaxAmmo;
+}
+
+bool AFPSCharacter::CanFire()
+{
+	return (NowAmmo > 0);
+
+	// TODO（残弾がある && リロード中でない）
 }
 
 // Called when the game starts or when spawned
@@ -50,46 +66,10 @@ void AFPSCharacter::BeginPlay()
 void AFPSCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
-
-}
-
-// Called to bind functionality to input
-void AFPSCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputComponent)
-{
-	Super::SetupPlayerInputComponent(PlayerInputComponent);
-
-	// 軸イベントのバインド
-	// - 移動
-	PlayerInputComponent->BindAxis("MoveForward", this, &AFPSCharacter::MoveForward);
-	PlayerInputComponent->BindAxis("MoveRight", this, &AFPSCharacter::MoveRight);
-
-	// - 視点
-	PlayerInputComponent->BindAxis("Turn", this, &AFPSCharacter::AddControllerYawInput);
-	PlayerInputComponent->BindAxis("LookUp", this, &AFPSCharacter::AddControllerPitchInput);
-
-	// アクションイベントのバインド
-	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Pressed, this, &AFPSCharacter::StartJump);
-	PlayerInputComponent->BindAction("Jump", EInputEvent::IE_Released, this, &AFPSCharacter::EndJump);
-
-	PlayerInputComponent->BindAction("Fire", EInputEvent::IE_Pressed, this, &AFPSCharacter::Fire);
-}
-
-void AFPSCharacter::MoveForward(float Value)
-{
-	// 前方方向
-	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::X);
-
-	// 移動
-	AddMovementInput(Direction * Value);
-}
-
-void AFPSCharacter::MoveRight(float Value)
-{
-	// 右方向
-	FVector Direction = FRotationMatrix(Controller->GetControlRotation()).GetScaledAxis(EAxis::Y);
-
-	// 移動
-	AddMovementInput(Direction * Value);
+	
+	// カメラはTickでないと動かない？
+	AddControllerYawInput(CameraInput.Yaw);
+	AddControllerPitchInput(CameraInput.Pitch);
 }
 
 void AFPSCharacter::StartJump()
@@ -104,6 +84,16 @@ void AFPSCharacter::EndJump()
 
 void AFPSCharacter::Fire()
 {
+	// キャラクターのステータスとして発射できる状態でなければ中止
+	if (!CanFire())
+	{
+		GEngine->AddOnScreenDebugMessage(-1, 3.f, FColor::Red, TEXT("Can not fire!"));
+		return;
+	}
+	// 一発消費
+	NowAmmo--;
+	UpdateLastAmmo.Broadcast(NowAmmo);
+
 	// ワールドの取得ができなければ中止
 	UWorld* World = GetWorld();
 	if (World == nullptr) return;
@@ -116,11 +106,9 @@ void AFPSCharacter::Fire()
 	FRotator CameraRotation;
 	GetActorEyesViewPoint(CameraLocation, CameraRotation);
 
-	// 発射位置の取得 -> カメラ位置 + カメラに合わせて回転させたマズル相対位置
-	FVector MuzzleLocation = CameraLocation + FTransform(CameraRotation).TransformVector(MuzzleOffset);
-	FRotator MuzzleRotation = CameraRotation;
-	// 発射方向調整
-	MuzzleRotation.Pitch += 10.f;
+	// 発射位置の調整：ArrowComponentの位置・回転を使用
+	FVector MuzzleLocation = ProjectileFirePoint->GetComponentLocation();
+	FRotator MuzzleRotation = ProjectileFirePoint->GetComponentRotation();
 
 	// - 以下生成
 
@@ -135,4 +123,38 @@ void AFPSCharacter::Fire()
 		FVector LaunchDirection = MuzzleRotation.Vector();
 		Projectile->FireInDirection(LaunchDirection);
 	}
+}
+
+void AFPSCharacter::MoveIF(FVector Direction)
+{
+	FVector MoveDirection = GetActorRotation().RotateVector(Direction);
+	MoveDirection.Normalize();
+
+	AddMovementInput(MoveDirection);
+}
+
+void AFPSCharacter::RotationIF(FRotator Rotation)
+{
+	CameraInput = Rotation;
+}
+
+void AFPSCharacter::StartJumpIF()
+{
+	StartJump();
+}
+
+void AFPSCharacter::EndJumpIF()
+{
+	EndJump();
+}
+
+void AFPSCharacter::FireIF()
+{
+	Fire();
+}
+
+void AFPSCharacter::ReloadIF()
+{
+	NowAmmo = MaxAmmo;
+	UpdateLastAmmo.Broadcast(NowAmmo);
 }
