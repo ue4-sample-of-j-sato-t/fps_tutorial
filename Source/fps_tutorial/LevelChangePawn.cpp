@@ -3,6 +3,7 @@
 
 #include "LevelChangePawn.h"
 #include "Engine.h"
+#include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 
 // Sets default values
 ALevelChangePawn::ALevelChangePawn()
@@ -22,5 +23,5 @@ void ALevelChangePawn::FireIF()
 		return;
 	}
 
-	UGameplayStatics::OpenLevel(this, NextLevelPath, false);
+	UGameplayStatics::OpenLevel(this, NextLevelPath);
 }

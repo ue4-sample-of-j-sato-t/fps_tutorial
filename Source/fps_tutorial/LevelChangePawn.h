@@ -17,7 +17,7 @@ protected:
 	
 	/**
 		遷移先レベル
-		@note "/Game"からのパスで、"アセット名.アセット名"にする
+		@note "/Game"からのパスで、にする（"アセット名.アセット名"にはしない）
 	*/
 	UPROPERTY(EditDefaultsOnly, Category = "LevelChange")
 	FName NextLevelPath;

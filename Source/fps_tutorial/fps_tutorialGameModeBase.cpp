@@ -142,6 +142,8 @@ void Afps_tutorialGameModeBase::Tick(float DeltaTime)
 
 	EGameTiming BeforTiming = GameTiming;
 
+	static bool lWaitInitialize = false;
+
 	switch (GameTiming)
 	{
 	case EGameTiming::RUNNING_GAME:
@@ -154,7 +156,8 @@ void Afps_tutorialGameModeBase::Tick(float DeltaTime)
 		TickAfter(DeltaTime);
 		break;
 	case EGameTiming::INITIALIZE:
-		GameTiming = EGameTiming::BEFOR_GAME;
+		if (lWaitInitialize)	GameTiming = EGameTiming::BEFOR_GAME;
+		else lWaitInitialize = true;
 		break;
 	default:
 		break;
@@ -169,6 +172,7 @@ void Afps_tutorialGameModeBase::Tick(float DeltaTime)
 			break;
 		case EGameTiming::BEFOR_GAME:
 			StartBefor();
+			lWaitInitialize = false;
 			break;
 		case EGameTiming::AFTER_GAME:
 			StartAfter();

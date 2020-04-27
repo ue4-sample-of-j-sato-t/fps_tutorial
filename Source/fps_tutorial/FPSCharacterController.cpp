@@ -38,12 +38,13 @@ void AFPSCharacterController::OnPossess(APawn* InPawn)
 {
 	Super::OnPossess(InPawn);
 
-	// 一旦クリア
-	CharacterInterface = nullptr;
-
 	if (InPawn->GetClass()->ImplementsInterface(UFPSCharacterInterface::StaticClass()))
 	{
 		CharacterInterface = Cast<IFPSCharacterInterface>(InPawn);
+	}
+	else
+	{
+		CharacterInterface = nullptr;
 	}
 }
 
@@ -101,6 +102,8 @@ void AFPSCharacterController::Reload()
 
 void AFPSCharacterController::Tick(float DeltaTime)
 {
+	Super::Tick(DeltaTime);
+
 	if (!CharacterInterface) return;
 	CharacterInterface->MoveIF(MoveDirection);
 	CharacterInterface->RotationIF(Rotation);
